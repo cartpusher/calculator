@@ -1,9 +1,9 @@
 const calculator = document.querySelector(".calculator");
 const display = document.querySelector(".display");
-let numA = "";
-let numB = "";
 let operation = "";
-let currentNum = "";
+let previousOperation = "";
+let runningTotal = "0";
+let currentNum = "0";
 
 display.innerText = "0";
 
@@ -15,50 +15,54 @@ calculator.addEventListener("click", function (event) {
     switch (getText(event)) {
       case "C":
         display.innerText = "0";
-        currentNum = "";
-        numA = "";
-        numB = "";
+        runningTotal = "0";
         operation = "";
+        currentNum = "0";
         break;
       case "←":
         currentNum = Math.trunc(+display.innerText / 10);
         display.innerText = currentNum;
         break;
       case "+":
+        previousOperation = operation;
         operation = "+";
-        numA = currentNum;
-        currentNum = "";
+        runningTotal = op(runningTotal, currentNum, previousOperation);
+        currentNum = "0";
         break;
       case "–":
+        previousOperation = operation;
         operation = "–";
-        numA = currentNum;
-        currentNum = "";
+        runningTotal = op(runningTotal, currentNum, previousOperation);
+        currentNum = "0";
         break;
       case "×":
+        previousOperation = operation;
         operation = "×";
-        numA = currentNum;
-        currentNum = "";
+        runningTotal = op(runningTotal, currentNum, previousOperation);
+        currentNum = "0";
         break;
       case "÷":
+        previousOperation = operation;
         operation = "÷";
-        numA = currentNum;
-        currentNum = "";
+        runningTotal = op(runningTotal, currentNum, previousOperation);
+        currentNum = "0";
         break;
       case "=":
-        numB = currentNum;
-        display.innerText = op(numA, numB, operation);
+        runningTotal = op(runningTotal, currentNum, operation);
+        display.innerText = runningTotal;
+        currentNum = runningTotal;
+        previousOperation = "";
         operation = "";
-        numA = "";
-        numB = "";
-        currentNum = display.innerHTML;
     }
   } else {
     currentNum += getText(event);
     display.innerText = +currentNum;
   }
+  console.log(runningTotal);
 });
 
 function op(a, b, op) {
+  if (op === "") return b; // first op is with only one number so just return it.
   a = Number.parseInt(a);
   b = Number.parseInt(b);
   if (op === "+") return a + b;
